@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petek - İki Kişi Oyna</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="prep-body"> <!-- Prep Body for consistent background -->
+    <div class="prep-container">
+        <div class="back-header">
+            <a href="index.html" class="back-btn">⬅ Geri</a>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 15px;">
+            <h1 style="color: var(--primary-yellow); text-shadow: 0px 4px 10px rgba(0,0,0,0.3);">İki Kişilik Mod</h1>
+        </div>
+
+        <!-- YUKARIDAKI KART: KATILIMCI -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary-yellow); text-align: center;">Mevcut Oyuna Katıl</h3>
+            
+            <div class="input-group">
+                <label class="input-label">Oyuncu Adın</label>
+                <input type="text" id="joinerNickname" class="custom-input" placeholder="Adınızı girin...">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Avatar Seçimi (Katılımcı)</label>
+                <div class="avatar-grid" id="joinerAvatarGrid">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="erkek">👨</div>
+                        <span class="avatar-label">Erkek</span>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="kadin">👩</div>
+                        <span class="avatar-label">Kadın</span>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="cinsiyetsiz">🧑</div>
+                        <span class="avatar-label">Diğer</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Oda Kodu</label>
+                <input type="text" id="joinCode" class="custom-input" placeholder="Örn: 48A2" style="text-transform: uppercase; text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+            </div>
+
+            <button class="btn" id="joinGameBtn" style="padding: 12px 20px; opacity:0.5; pointer-events:none; width: 100%;">Odaya Katıl</button>
+            <p id="joinStatusText" style="text-align: center; color: white; display: none; margin-top: 10px; font-weight: bold;">Kurucunun oyunu başlatması bekleniyor...</p>
+        </div>
+
+        <div class="divider">VEYA</div>
+
+        <!-- AŞAĞIDAKİ KART: KURUCU -->
+        <div class="card">
+            <h3 style="margin-bottom: 15px; color: var(--primary-yellow); text-align: center;">Yeni Oyun Kur</h3>
+            
+            <div class="input-group">
+                <label class="input-label" for="hostNickname">Kurucu Adın</label>
+                <input type="text" id="hostNickname" class="custom-input" placeholder="Adınızı girin..." autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Avatar Seçimi (Kurucu)</label>
+                <div class="avatar-grid" id="hostAvatarGrid">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="erkek">👨</div>
+                        <span class="avatar-label">Erkek</span>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="kadin">👩</div>
+                        <span class="avatar-label">Kadın</span>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <div class="avatar-card" data-avatar="cinsiyetsiz">🧑</div>
+                        <span class="avatar-label">Diğer</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Oyun Kategorisi</label>
+                <div class="category-grid" id="categoryGrid">
+                    <div class="category-card" data-category="sanat">
+                        <div class="category-icon">🎨</div>
+                        <div class="category-name">Sanat</div>
+                    </div>
+                    <div class="category-card" data-category="spor">
+                        <div class="category-icon">⚽</div>
+                        <div class="category-name">Spor</div>
+                    </div>
+                    <div class="category-card" data-category="kultur">
+                        <div class="category-icon">🌍</div>
+                        <div class="category-name">G. Kültür</div>
+                    </div>
+                    <div class="category-card" data-category="bilim">
+                        <div class="category-icon">🔬</div>
+                        <div class="category-name">Bilim</div>
+                    </div>
+                    <div class="category-card" data-category="tarih">
+                        <div class="category-icon">🏛️</div>
+                        <div class="category-name">Tarih</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" id="generateCodeBtn" style="opacity:0.5; pointer-events:none; margin-bottom: 15px; width: 100%;">Oyun Kodu Oluştur</button>
+            
+            <div id="codeDisplayArea" style="display: none;">
+                <div class="input-label" style="text-align: center;">Arkadaşına Kodu Gönder:</div>
+                <div class="code-box" id="generatedCodeBox" style="font-size: 2.8rem; text-align: center; background: white; padding: 15px; border-radius: 12px; font-weight: 900; color: #4A148C; letter-spacing: 12px; box-shadow: inset 0px 4px 10px rgba(0,0,0,0.1);">X7B9</div>
+                
+                <p id="hostStatusText" style="text-align: center; color: white; margin: 15px 0;">Rakibin katılması bekleniyor... ⏳</p>
+                <button class="btn" id="startHostGameBtn" style="background-color: #4CAF50; color: white; opacity:0.5; pointer-events:none; width: 100%;">Oyuna Başla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="iki-kisilik.js"></script>
+</body>
+</html>

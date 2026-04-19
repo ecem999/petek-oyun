@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petek - İki Kişilik Müsabaka</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="game-body">
+    <div class="game-container" style="position: relative;"> <!-- block relative -->
+
+        <!-- Sıra Blockeri (Rakip Bekleniyor) -->
+        <div id="boardBlocker" style="display: none;">
+            <div id="waitOverlayText">Rakibin Hamlesi Bekleniyor... ⏳</div>
+        </div>
+        
+        <!-- Üst Bölüm (Skor Tablosu) -->
+        <div class="scoreboard-row" style="z-index: 9001;">
+            <!-- Sol: Host Bilgisi -->
+            <div class="player-info" id="p1InfoBox">
+                <div class="avatar-circle" id="p1Avatar">👨</div>
+                <div class="player-details">
+                    <div class="player-name" id="p1Name">Kurucu</div>
+                    <div class="player-score">Puan: <span id="p1Score">0</span></div>
+                </div>
+            </div>
+
+            <!-- Ortada Kronometre -->
+            <div class="timer-wrapper">
+                <div class="timer-hex">
+                    <span id="countdown">15</span>
+                </div>
+            </div>
+
+            <!-- Sağ: Joiner Bilgisi -->
+            <div class="player-info right-aligned" id="p2InfoBox">
+                <div class="player-details" style="text-align: right;">
+                    <div class="player-name" id="p2Name">Katılımcı</div>
+                    <div class="player-score">Puan: <span id="p2Score">0</span></div>
+                </div>
+                <div class="avatar-circle bot-avatar" id="p2Avatar" style="background-color: var(--primary-yellow);">👩</div>
+            </div>
+        </div>
+
+        <!-- Orta Bölüm (Puan Paneli Petekleri Honeycomb Grid) -->
+        <div class="honeycomb-grid" id="hexGridContainer">
+            <div class="hex-row">
+                <div class="hex-point" data-val="50">50</div>
+                <div class="hex-point" data-val="100">100</div>
+                <div class="hex-point" data-val="150">150</div>
+            </div>
+            <div class="hex-row">
+                <div class="hex-point" data-val="200">200</div>
+                <div class="hex-point" data-val="250">250</div>
+                <div class="hex-point" data-val="300">300</div>
+                <div class="hex-point" data-val="350">350</div>
+            </div>
+            <div class="hex-row">
+                <div class="hex-point" data-val="400">400</div>
+                <div class="hex-point" data-val="450">450</div>
+                <div class="hex-point" data-val="500">500</div>
+            </div>
+        </div>
+
+        <!-- Alt Bölüm (Soru Paneli) -->
+        <div class="question-panel" id="questionPanelContainer">
+            <div class="q-wrapper">
+                <div class="question-hex">
+                    <p id="questionText">Puan değerine sahip bir petek seç ve heyecana başla!</p>
+                </div>
+            </div>
+            
+            <div class="answers-grid" id="answersGrid" style="opacity: 0.5;">
+                <button class="ans-btn" data-correct="false" id="ans0">A) Seçenek</button>
+                <button class="ans-btn" data-correct="false" id="ans1">B) Seçenek</button>
+                <button class="ans-btn" data-correct="false" id="ans2">C) Seçenek</button>
+                <button class="ans-btn" data-correct="false" id="ans3">D) Seçenek</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sıra Rakipte Animasyonu Overlay -->
+    <div class="turn-overlay" id="turnOverlay" style="z-index: 10001;">
+        <h2 id="turnText">Sıra Rakipte!</h2>
+    </div>
+
+    <!-- Oyun Sonu Modalı -->
+    <div class="modal-overlay" id="endGameModal" style="z-index: 10005;">
+        <div class="modal-content end-game-content">
+            <h2 class="modal-title" id="endGameTitle">Oyun Bitti! 🏆</h2>
+            
+            <div style="display: flex; justify-content: space-around; margin: 20px 0; align-items: center;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 5px;" id="endP1Avatar">👨</div>
+                    <div style="font-weight: 800; color: var(--text-main);" id="endP1Name">Kurucu</div>
+                    <div style="font-size: 1.8rem; font-weight: 900; color: #4CAF50;" id="endP1ScoreVal">0</div>
+                </div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--text-main);">-</div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 5px;" id="endP2Avatar">👩</div>
+                    <div style="font-weight: 800; color: var(--text-main);" id="endP2Name">Katılımcı</div>
+                    <div style="font-size: 1.8rem; font-weight: 900; color: #03A9F4;" id="endP2ScoreVal">0</div>
+                </div>
+            </div>
+
+            <button id="returnHomeBtn" class="btn" style="width: 100%;">Ana Sayfaya Dön</button>
+        </div>
+    </div>
+
+    <!-- JS Yüklemesi -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="sorular.js"></script>
+    <script src="oyun-2.js"></script>
+</body>
+</html>

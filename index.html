@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petek Oyunu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Üst Kontrol Alanı -->
+    <div class="header">
+        <button class="icon-btn" id="helpBtn" title="Yardım">?</button>
+    </div>
+
+    <!-- Logo Alanı -->
+    <div class="logo-container">
+        <img src="logo.png" alt="Petek Düellosu" class="brand-logo">
+    </div>
+
+    <!-- Ana Menü Seçenekleri (Klasik Petek Dizilimi) -->
+    <div class="honeycomb-menu-container">
+        <!-- 1. Büyük Petek (Üst Sol) -->
+        <div class="honeycomb-btn h-large h-pos-1" id="soloPlayCard">
+            <h2>Tek Kişi<br>Oyna</h2>
+            <p>Bota karşı<br>test et!</p>
+        </div>
+
+        <!-- 2. Büyük Petek (Alt Sağ) -->
+        <div class="honeycomb-btn h-large h-pos-2" id="duoPlayCard">
+            <h2>İki Kişi<br>Oyna</h2>
+            <p>Arkadaşınla<br>rekabet et!</p>
+        </div>
+
+        <!-- 3. Küçük Petek (Alt Sol) -->
+        <div class="honeycomb-btn h-small h-pos-3" id="howToPlayBtn">
+            <h2>Nasıl<br>Oynanır?</h2>
+            <p>Kurallar</p>
+        </div>
+    </div>
+
+    <!-- Kurallar Modalı (Popup) -->
+    <div class="modal-overlay" id="rulesModal">
+        <div class="modal-content rules-content">
+            <button class="close-btn" id="closeModalBtn" style="color: #4A148C; font-weight: 900; background: none; border: none; font-size: 1.5rem; position: absolute; right: 15px; top: 15px; cursor: pointer;">✕</button>
+            <h2 class="modal-title" style="color: #4A148C; text-align: center; margin-bottom: 20px;">🐝 Petek Düellosu'na <br>Hoş Geldin!</h2>
+            <div class="modal-body" style="color: #4A148C; font-weight: 600; line-height: 1.6; font-size: 0.95rem;">
+                <p><strong>Puanını Seç:</strong> Puan panelindeki peteklerden birine dokun. Unutma, puan yükseldikçe soruların zorluğu da artar!</p>
+                <p><strong>Zamana Karşı Yarış:</strong> Her soru için sadece 15 saniyen var. Hızlı düşünüp doğru şıkkı kapmalısın! ⏱️</p>
+                <p><strong>Dikkat, Soru Çalınabilir!:</strong> Eğer yanlış cevap verirsen veya süren biterse sıra rakibine geçer. Rakibin bu soruyu bilirse puanı o kazanır! 😱</p>
+                <p><strong>Zirveye Oyna:</strong> Tüm petekler dolduğunda en yüksek puana ulaşan oyunun kralı/kraliçesi olur! 🏆</p>
+            </div>
+            <button class="btn" id="understandBtn" style="width: 100%; margin-top: 15px; background-color: #4A148C; color: white;">Anladım, Başlayalım!</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Dosyası -->
+    <script src="main.js"></script>
+</body>
+</html>

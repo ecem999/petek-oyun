@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tek Kişi Oyna - Hazırlık</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="back-header">
+        <a href="index.html" class="back-btn">⬅ Geri</a>
+    </div>
+
+    <div class="card">
+        <h2>Bot Modu</h2>
+        
+        <div class="input-group">
+            <label class="input-label" for="nickname">Oyuncu Adın</label>
+            <input type="text" id="nickname" class="custom-input" placeholder="nickname girin..." autocomplete="off">
+        </div>
+
+        <!-- Avatar Seçimi -->
+        <div class="input-group">
+            <label class="input-label">Avatar Seçimi</label>
+            <div class="avatar-grid" id="avatarGrid">
+                <div class="avatar-wrapper">
+                    <div class="avatar-card" data-avatar="erkek">👨</div>
+                    <span class="avatar-label">Erkek</span>
+                </div>
+                <div class="avatar-wrapper">
+                    <div class="avatar-card" data-avatar="kadin">👩</div>
+                    <span class="avatar-label">Kadın</span>
+                </div>
+                <div class="avatar-wrapper">
+                    <div class="avatar-card" data-avatar="cinsiyetsiz">🧑</div>
+                    <span class="avatar-label">Diğer</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">Kategori Seçimi</label>
+            <div class="category-grid" id="categoryGrid">
+                <div class="category-card" data-category="sanat">
+                    <div class="category-icon">🎨</div>
+                    <div class="category-name">Sanat</div>
+                </div>
+                <div class="category-card" data-category="spor">
+                    <div class="category-icon">⚽</div>
+                    <div class="category-name">Spor</div>
+                </div>
+                <div class="category-card" data-category="kultur">
+                    <div class="category-icon">🌍</div>
+                    <div class="category-name">Genel Kültür</div>
+                </div>
+                <div class="category-card" data-category="bilim">
+                    <div class="category-icon">🔬</div>
+                    <div class="category-name">Bilim</div>
+                </div>
+                <div class="category-card" data-category="tarih">
+                    <div class="category-icon">🏛️</div>
+                    <div class="category-name">Tarih</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zorluk Seviyesi -->
+        <div class="input-group">
+            <label class="input-label">Zorluk Seviyesi</label>
+            <div class="diff-group" id="difficultyGroup">
+                <button class="diff-btn" data-diff="kolay">Kolay</button>
+                <button class="diff-btn" data-diff="orta">Orta</button>
+                <button class="diff-btn" data-diff="zor">Zor</button>
+            </div>
+        </div>
+
+        <button class="btn" id="startGameBtn" disabled>Oyuna Başla</button>
+    </div>
+
+    <script src="tek-kisilik.js"></script>
+</body>
+</html>

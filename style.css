@@ -1,0 +1,1131 @@
+/* Genel Ayarlar ve Renk Paleti */
+:root {
+    /* Arka plan geçişi için lila ve mor tonları */
+    --bg-color-start: #E6E6FA; /* Lila */
+    --bg-color-end: #9370DB; /* Mor */
+    
+    /* Buton ve kartlar için canlı sarı tonları */
+    --primary-yellow: #FFD700;
+    --primary-yellow-dark: #E6C200;
+    
+    /* Gölge ve 3D efektleri için renkler */
+    --shadow-color: rgba(75, 0, 130, 0.25); /* Koyu mor tonlarında gölge */
+    --highlight-color: rgba(255, 255, 255, 0.6);
+
+    /* Metin renkleri */
+    --text-main: #4A148C; /* Okunabilirliği yüksek koyu mor */
+}
+
+/* Temel Sıfırlama ve Body Stilleri */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Lila'dan mora geçişli arka plan */
+    background: linear-gradient(135deg, var(--bg-color-start) 0%, var(--bg-color-end) 100%);
+    background-attachment: fixed; /* Mobilde scroll yaparken arkaplan sabit kalsın */
+    min-height: 100vh;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    /* Mobil öncelikli (responsive) yapı için */
+    width: 100%;
+}
+
+/* 
+  Ortak 'Kart' Sınıfı 
+  Yumuşak köşeli, sevimli, hafif 3D görünümlü kart yapıları.
+*/
+.card {
+    background-color: var(--primary-yellow);
+    border-radius: 24px; /* Yumuşak ve geniş köşeler */
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px; /* Mobilde tam ekran, tablette/web'de ortalanmış */
+    
+    /* Hafif 3D Efekti: Üstten aydınlatma, alttan kendi renginin koyusu ile kalınlık ve dış gölge */
+    box-shadow: 
+        0px 10px 20px var(--shadow-color),
+        inset 0px 4px 0px var(--highlight-color),
+        inset 0px -4px 0px var(--primary-yellow-dark);
+        
+    /* Formu desteklemek ve sevimli göstermek için ince bir çizgi */
+    border: 3px solid var(--primary-yellow-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.3s ease;
+}
+
+/* Karta hover gelindiğinde hafif zıplama efekti (opsiyonel) */
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card h2, .card h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: 800;
+}
+
+.card p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* 
+  Ortak 'Buton' Sınıfı 
+  Canlı sarı, yumuşak köşeli, 3D ve interaktif (hover/active efektli) buton yapıları.
+*/
+.button, .btn {
+    appearance: none;
+    background-color: var(--primary-yellow);
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 16px 24px;
+    border-radius: 100px; /* Tam yuvarlak (hap şeklinde) sevimli buton */
+    border: 2px solid var(--primary-yellow-dark);
+    cursor: pointer;
+    width: 100%;
+    
+    /* 3D Görünüm: Aydınlatma ve alt gölge ile kalınlık (basılabilir) hissi */
+    box-shadow: 
+        0px 6px 0px var(--primary-yellow-dark),
+        0px 8px 15px var(--shadow-color),
+        inset 0px 3px 0px var(--highlight-color);
+        
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); /* Yumuşak animasyon geçişi */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    user-select: none; /* Metin seçimi engelleniyor */
+}
+
+/* Üzerine gelindiğinde (Hover): Hafif küçülme ve koyulaşma efekti */
+.button:hover, .btn:hover {
+    background-color: var(--primary-yellow-dark); /* Renk koyulaşıyor */
+    transform: scale(0.98) translateY(2px); /* Hem hafif küçülüyor hem aşağı iniyor */
+    /* 3D gölgeyi (kalınlığı) azaltarak basılıyormuş hissini başlatma */
+    box-shadow: 
+        0px 4px 0px var(--primary-yellow-dark),
+        0px 5px 10px var(--shadow-color),
+        inset 0px 3px 0px rgba(255, 255, 255, 0.4);
+}
+
+/* Tıklandığında (Active): Tamamen basılmış hissi */
+.button:active, .btn:active {
+    transform: scale(0.95) translateY(6px); /* Daha fazla küçülüp tam basılıyor */
+    background-color: #D4B400; /* Biraz daha koyu sarı */
+    /* Kalınlık gölgesi sıfırlanıyor (buton zemine oturdu) */
+    box-shadow: 
+        0px 0px 0px var(--primary-yellow-dark),
+        0px 2px 5px var(--shadow-color),
+        inset 0px 3px 0px rgba(255, 255, 255, 0.2);
+}
+
+/* Mobil cihazlarda kullanılabilirlik için ekstra medya sorguları */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .card {
+        padding: 18px;
+        border-radius: 20px;
+        gap: 12px;
+    }
+    
+    .button, .btn {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}
+
+/* ============================================================== */
+/* YENİ EKLENEN ANA SAYFA (INDEX) STİLLERİ                          */
+/* ============================================================== */
+
+/* --- Üst Menü İkonları (Ayarlar ve Yardım) --- */
+.header {
+    width: 100%;
+    max-width: 400px; /* Mobilde kartlarla hizalı tutmak için */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
+.icon-btn {
+    width: 72px; /* %20 civarı daha büyük (Eskiden 60px) */
+    height: 84px;
+    /* Parlak Petek Sarısı Soru İşareti Butonu (Eski Pembe Renk İptal) */
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 60%), linear-gradient(135deg, #FFD54F 0%, #FFB300 50%, #FF8F00 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.95rem; /* İkon büyütüldü */
+    font-weight: 900; /* Çok daha kalın, dolgun bir görünüm */
+    color: #4A148C;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.15));
+}
+
+.icon-btn:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0px 0px 14px rgba(255, 215, 0, 0.8));
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Ana Menü Klasik Petek Tasarımları --- */
+.honeycomb-menu-container {
+    position: relative;
+    width: 320px;
+    height: 290px;
+    
+    /* Dikey ortalama - Logo ile alt kısım arasında mükemmel dengelenir */
+    margin: auto; 
+    
+    /* Tüm petekleri oranları bozulmadan (iç yazılarıyla birlikte) eski %22 yerine şimdi %40 büyütür (Ekstra ~%15-20 kazanç) */
+    transform: scale(1.40); 
+    transform-origin: center center;
+}
+
+/* Mobil limitler - Büyütülen petekler ufak ekranlarda viewport dışına taşmasın */
+@media screen and (max-width: 440px) {
+    .honeycomb-menu-container {
+        transform: scale(1.22); /* Limit (Eski büyük boyut şimdi mobil maks limit oldu) */
+    }
+}
+@media screen and (max-width: 380px) {
+    .honeycomb-menu-container {
+        transform: scale(1.05); /* Çok dar telefonlar */
+    }
+}
+
+.honeycomb-btn {
+    position: absolute;
+    /* Tam Keskin Petek (Altıgen) silüeti - Düz üst/alt, sivri yanlar */
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    
+    /* Temiz, Pürüzsüz Bal Rengi Linear Degrade (Koyu Amber'den Açık Sarıya) */
+    /* Tüm desen ve iç gölgeler kaldırıldı */
+    background: linear-gradient(180deg, #FFA000 0%, #FFECB3 100%);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease, z-index 0s;
+    
+    /* İnce Üst-Sol Işık Parlaması (Kenar Vurgusu/Highlight) + Zemin Gölgesi */
+    filter: drop-shadow(-1.5px -1.5px 0px rgba(255, 255, 255, 0.9)) drop-shadow(0px 8px 12px rgba(255, 143, 0, 0.5));
+}
+
+.honeycomb-btn.h-large {
+    width: 170px;
+    height: 147px; /* W * 0.866 */
+    padding: 10px;
+}
+
+.honeycomb-btn.h-small {
+    width: 125px;
+    height: 108px; /* W * 0.866 */
+    padding: 10px;
+}
+
+/* Pozisyonlamalar (Arı kovanı içiçe dizilimi) */
+.honeycomb-btn.h-pos-1 {
+    top: 0;
+    left: 10px;
+    z-index: 2;
+}
+
+.honeycomb-btn.h-pos-2 {
+    top: 78px; /* Tam ortadan hizalama yarı yüksekliği */
+    left: 142px; /* Genişliğin %75'i civarı + boşluk */
+    z-index: 1;
+}
+
+.honeycomb-btn.h-pos-3 {
+    top: 156px; 
+    left: 45px; /* Alt-sol cepheye sımsıkı oturtulmuş küçük petek */
+    z-index: 3;
+}
+
+/* --- İkonlar ve Tipografi --- */
+.honeycomb-btn h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+    color: #4A148C; /* Koyu Mor (Siyah/Mor Vurgu) */
+    line-height: 1.1;
+}
+
+.honeycomb-btn.h-small h2 {
+    font-size: 1rem; /* Küçük peteğin başlığı biraz daha küçük */
+}
+
+.honeycomb-btn p {
+    font-size: 0.95rem; /* Boyut birkaç piksel büyütüldü ve daha okunabilir kılındı */
+    font-weight: 700;
+    color: #222222; /* Koyu gri, neredeyse siyah temiz modern metin */
+    line-height: 1.25;
+}
+
+.honeycomb-btn.h-small p {
+    font-size: 0.85rem;
+}
+
+.honeycomb-btn:hover {
+    transform: scale(1.1); /* Yumuşak tam büyüme animasyonu */
+    /* Hover anında Camsı Halo yansıması ve Güçlü Kehribar (Altın) Glow */
+    filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.8)) drop-shadow(0px 0px 20px rgba(255, 215, 0, 0.95));
+    z-index: 10 !important; /* Büyüdüğünde tasarımın en üstüne çıksın */
+}
+
+/* --- Logo ve Responsive Düzen --- */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    position: relative; /* Mistk halo efekti için referans */
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Mistik ve Değerli Hava Katan Petek/Bal Mumu Parıltısı (Halo Aura) */
+.logo-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, rgba(255, 143, 0, 0.08) 40%, transparent 70%);
+    pointer-events: none; /* Mouse engellemesini engeller */
+    z-index: -1; /* Logonun arkasında kalsın */
+}
+
+.brand-logo {
+    max-width: 100%; /* Mobil cihazlarda taşmayı önler */
+    width: 200px; /* Daha zarif ve toparlanmış bir boyut (eskiden 300px'ti) */
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0px 8px 15px var(--shadow-color)); /* Logoya derinlik katan lila gölge */
+}
+
+/* Havada Süzülme Animasyonu (Float) */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- Menu Kartı Özel İmleç ve Tıklanabilirlik Bildirimi --- */
+.menu-card {
+    cursor: pointer;
+}
+
+/* --- Modal (Açılır Pencere) Stilleri --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 0, 60, 0.75); /* Koyu Arka Plan */
+    backdrop-filter: blur(5px); /* Arka planı bulanıklaştırma efekti */
+    
+    /* Modalı ortalamak için Flexbox */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Varsayılan olarak gizli */
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* JavaScript bu sınıfı eklediğinde modal görünür olur */
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: linear-gradient(to bottom, #FFFFFF, #FFF5FA);
+    width: 90%;
+    max-width: 380px;
+    border-radius: 28px;
+    padding: 30px;
+    position: relative;
+    
+    /* İçerik de hafif sevimli bir kenarlıkla sınırlandırılıyor */
+    border: 4px solid var(--primary-yellow);
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+    
+    /* Açılış animasyonu için varsayılan olarak küçültülmüş ve aşağı kaydırılmış */
+    transform: translateY(30px) scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Sıçrama (Bouncy) hareketi */
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.modal-title {
+    color: var(--text-main);
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-body {
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    font-size: 1.05rem;
+}
+
+.modal-body p {
+    margin-bottom: 10px;
+}
+
+/* Çarpı (Kapatma) Butonu */
+.close-btn {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 44px;
+    height: 44px;
+    background-color: #FF4D6D; /* Tatlı pembe/kırmızı tonu */
+    color: white;
+    border: 4px solid white;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.1) rotate(90deg); /* Üzerine gelince biraz dönme ve büyüme */
+    background-color: #FF3355;
+}
+
+/* ============================================================== */
+/* OYUN HAZIRLIK (PREP) SAYFALARI İÇİN STİLLER                    */
+/* ============================================================== */
+
+/* --- Input ve Form Alanları --- */
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-label {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.custom-input {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 18px;
+    border: 3px solid var(--primary-yellow-dark);
+    font-size: 1.1rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0px 4px 6px rgba(0,0,0,0.03);
+    color: var(--text-main);
+    background-color: #fffaee;
+    font-weight: 600;
+}
+
+.custom-input::placeholder {
+    color: #b5a25e;
+    font-weight: 500;
+}
+
+.custom-input:focus {
+    background-color: #ffffff;
+    border-color: var(--text-main);
+    box-shadow: 0px 0px 0px 4px rgba(75, 0, 130, 0.15);
+}
+
+.custom-input:disabled {
+    background-color: #e9e9e9;
+    border-color: #ccc;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* --- Kategori Kartları Izgarası (Grid) --- */
+.category-grid {
+    display: grid;
+    /* Mobilde 3 sütun sığacak şekilde, aralarında boşlukla */
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 12px;
+}
+
+.category-card {
+    background-color: #FFFFFF;
+    border: 3px solid #E6E6FA; /* Açık lila kenarlık */
+    border-radius: 20px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-yellow-light);
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.06);
+}
+
+.category-card.selected {
+    border-color: var(--text-main);
+    background-color: var(--primary-yellow); /* Aktif kart tamamen sarı oluyor */
+    box-shadow: 0px 4px 0px var(--primary-yellow-dark);
+    transform: translateY(-2px);
+}
+
+.category-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.category-name {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-main);
+    text-align: center;
+}
+
+/* --- Geri Butonu (Üst Sol) --- */
+.back-header {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 5px;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateX(-4px);
+}
+
+/* --- Oyun Kodu Görüntüleme Kutusu --- */
+.code-box {
+    background-color: #E6E6FA; /* Lila içi */
+    border: 3px dashed var(--text-main);
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: 8px;
+    margin: 15px 0 20px 0;
+    box-shadow: inset 0px 4px 6px rgba(0,0,0,0.05);
+}
+
+/* --- Ayraç (VEYA yazısı) --- */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin: 15px 0;
+    width: 100%;
+    max-width: 400px;
+    opacity: 0.9;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.6);
+}
+
+.divider::before { margin-right: 15px; }
+.divider::after { margin-left: 15px; }
+
+/* --- Inaktif (Basılamaz) Buton Stili --- */
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #e2c000;
+    transform: none !important;
+    box-shadow: 0px 4px 0px var(--primary-yellow-dark) !important;
+}
+
+/* --- Avatar Seçimi --- */
+.avatar-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.avatar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.avatar-card {
+    background-color: #FFFFFF;
+    border: 3px solid #E6E6FA;
+    border-radius: 50%;
+    width: 80px;  /* Büyütüldü */
+    height: 80px; /* Büyütüldü */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem; /* Büyütüldü */
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.avatar-card:hover {
+    transform: scale(1.1);
+    border-color: var(--primary-yellow-light);
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+}
+
+.avatar-card.selected {
+    border-color: var(--text-main);
+    background-color: var(--primary-yellow);
+    box-shadow: 0px 4px 0px var(--primary-yellow-dark);
+    transform: translateY(-2px);
+}
+
+/* --- Zorluk Seviyesi Butonları --- */
+.diff-group {
+    display: flex;
+    gap: 10px;
+    background-color: #FFFFFF;
+    border: 3px solid #E6E6FA;
+    border-radius: 18px;
+    padding: 6px;
+}
+
+.diff-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 10px 0;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.diff-btn:hover {
+    background-color: rgba(230, 230, 250, 0.5);
+}
+
+.diff-btn.selected {
+    background-color: var(--primary-yellow);
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
+    color: var(--text-main);
+}
+
+/* ============================================================== */
+/* OYUN EKRANI STİLLERİ (oyun.html)                               */
+/* ============================================================== */
+
+.game-body {
+    padding: 15px;
+    align-items: stretch; /* Esnemeye izin ver */
+}
+
+.game-container {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1; /* Ekranı kaplaması için */
+}
+
+/* --- Skor Tablosu (Üst Bölüm) --- */
+.scoreboard-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 20px;
+    padding: 10px 15px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.05);
+}
+
+/* ============================================================== */
+/* OYUNCU BİLGİSİ VE SIRA ANİMASYONLARI (MULTIPLAYER)             */
+/* ============================================================== */
+
+/* Dönen Canlı Işık Süzmesi (Glow) Animasyonu */
+@keyframes spinGlow {
+    0% { box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, inset 0 0 5px #FFD700; transform: scale(1); }
+    50% { box-shadow: 0 0 20px #FFF, 0 0 35px #FFD700, inset 0 0 15px #FFD700; transform: scale(1.05); }
+    100% { box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, inset 0 0 5px #FFD700; transform: scale(1); }
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    padding: 5px;
+    border-radius: 40px;
+    border: 3px solid transparent; 
+    transition: all 0.3s ease;
+}
+
+/* SIRA KİMDEYSE O PARLASIN (YENİ ANİMASYON) */
+.player-info.active-turn {
+    border-color: var(--primary-yellow);
+    animation: spinGlow 2s infinite ease-in-out;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.player-info.right-aligned {
+    justify-content: flex-end;
+}
+
+.avatar-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #FFF6C4;
+    border: 4px solid var(--primary-yellow);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem; 
+    box-shadow: 0px 4px 0px var(--primary-yellow-dark);
+}
+
+.bot-avatar {
+    background-color: #E2E8F0; 
+    border-color: #90A4AE;
+    box-shadow: 0px 4px 0px #78909C;
+}
+
+.player-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.player-score {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #4A148C;
+    opacity: 0.8;
+}
+
+/* --- Kronometre (Büyük Petek) --- */
+.timer-wrapper {
+    filter: drop-shadow(0px 8px 10px rgba(255, 77, 109, 0.4));
+}
+
+.timer-hex {
+    width: 60px;
+    height: 70px;
+    background-color: #FF4D6D;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+    margin: 0 10px;
+}
+
+/* --- Puan Paneli (Petek Izgara H-Comb) --- */
+.honeycomb-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.hex-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px; /* Petekler arası yatay boşluk */
+    margin-bottom: -15px; /* Petekleri birbirine geçirir (interlock) */
+}
+
+.hex-point {
+    width: 68px;
+    height: 78px;
+    /* Pürüzsüz altıgen doku ve sarı/turuncu sıcak degrade */
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 60%), linear-gradient(135deg, #FFD54F 0%, #FFB300 50%, #FF8F00 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #000000; /* Net Siyah Puan */
+    cursor: pointer;
+    filter: drop-shadow(0px 4px 5px rgba(255, 143, 0, 0.4)); /* Bal mumu parlaklığı efekti */
+    transition: all 0.2s ease; /* Akıcı ve yumuşak geçiş */
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+/* Mouse ile üzerine gelindiğinde oluşan parlama (Halo) ve büyüme */
+.hex-point:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0px 0px 12px rgba(255, 215, 0, 0.9)); /* Altın Sarısı Parlaklık */
+    z-index: 20;
+}
+
+/* Tıklandığındaki büyüme ve üste çıkma efekti */
+.hex-point.pop-up {
+    transform: scale(1.1);
+    z-index: 20;
+    position: relative;
+}
+
+/* Tüm Cevaplanmış (Kilitli) Petekler: Gri Yerine Koyu Sarı / Amber / Goldenrod */
+.hex-point.played,
+.hex-point.correct-hex,
+.hex-point.bot-correct,
+.hex-point.p1-correct,
+.hex-point.p2-correct {
+    background: linear-gradient(135deg, #DFB127 0%, #B8860B 100%); /* Koyu Turuncu-Sarı */
+    color: #FFFFFF; /* Beyaz Puan Rengi */
+    filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.4)); /* Sönük gölge */
+    pointer-events: none !important;
+    transform: scale(1); /* Soru kapandığında büyüme sıfırlanır, eski boyutuna döner */
+}
+
+/* --- Alt Bölüm (Soru Paneli) --- */
+.question-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto; /* Sayfanın daha altına iter */
+}
+
+/* Yatay Uzatılmış Altıgen için Gölge Wrapper'ı */
+.q-wrapper {
+    filter: drop-shadow(0px 8px 10px var(--shadow-color));
+}
+
+.question-hex {
+    width: 100%;
+    min-height: 90px;
+    background-color: #FFFFFF;
+    /* İki ucu sivri (25px offsetli) yatay poligon */
+    clip-path: polygon(25px 0%, calc(100% - 25px) 0%, 100% 50%, calc(100% - 25px) 100%, 25px 100%, 0% 50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    text-align: center;
+}
+
+#questionText {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* --- Şık Butonları --- */
+.answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    transition: opacity 0.3s ease;
+}
+
+.ans-btn {
+    background-color: #FFFFFF;
+    border: 3px solid var(--primary-yellow);
+    border-radius: 16px;
+    padding: 15px 10px;
+    font-weight: 800;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 0px var(--primary-yellow-dark);
+}
+
+.ans-btn:hover {
+    background-color: var(--primary-yellow-light);
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px var(--primary-yellow-dark);
+}
+
+.ans-btn.correct {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #2E7D32;
+    box-shadow: 0px 4px 0px #2E7D32;
+    transform: translateY(2px);
+}
+
+.ans-btn.wrong {
+    background-color: #FF4D6D;
+    color: white;
+    border-color: #C62828;
+    box-shadow: 0px 4px 0px #C62828;
+    transform: translateY(2px);
+}
+
+/* Mobil Ufak Ekran Ekstra Ayarları */
+@media screen and (max-width: 400px) {
+    .hex-point { width: 58px; height: 68px; font-size: 1.15rem; }
+    .hex-row { margin-bottom: -12px; }
+    .question-hex {
+        clip-path: polygon(15px 0%, calc(100% - 15px) 0%, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0% 50%);
+        padding: 15px 25px;
+    }
+}
+
+
+/* ============================================================== */
+/* FLAŞ VE GÖRSEL MÜDAHALE (OYUN)                                 */
+/* ============================================================== */
+
+/* Tüm Ekran Başarı/Hata Flaş Efektleri */
+.flash-overlay-green {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 9999;
+    background-color: rgba(76, 175, 80, 0.45);
+    animation: fadeOutFlash 0.6s ease-out forwards;
+}
+
+.flash-overlay-red {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 9999;
+    background-color: rgba(244, 67, 54, 0.45);
+    animation: fadeOutFlash 0.6s ease-out forwards;
+}
+
+@keyframes fadeOutFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* SIRA RAKİPTE (TOUR) OVERLAY */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px); /* İstenilen hafif bulanıklık */
+    display: none; justify-content: center; align-items: center;
+    z-index: 10500;
+}
+
+.modal-overlay.active {
+    display: flex !important;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%; max-width: 400px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    border: 5px solid var(--primary-yellow);
+}
+
+.modal-content.rules-content {
+    background-color: #FFF9C4; /* Yumuşak Sarı Arka Plan */
+    border-color: #FFD54F;
+    box-shadow: 0px 10px 40px rgba(74, 20, 140, 0.2);
+}
+
+.modal-content.rules-content p {
+    margin-bottom: 12px;
+    border-bottom: 1px dashed rgba(74, 20, 140, 0.2);
+    padding-bottom: 8px;
+}
+
+.turn-overlay {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 5px solid var(--primary-yellow);
+    border-radius: 30px;
+    padding: 30px 60px;
+    z-index: 10000;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    text-align: center;
+}
+
+.turn-overlay.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+
+.turn-overlay h2 {
+    color: var(--text-main);
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+/* ============================================================== */
+/* ÇOK OYUNCULU SENKRONİZASYON (SHAKE, BLUE)                      */
+/* ============================================================== */
+
+@keyframes shakeHex {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.shake {
+    animation: shakeHex 0.4s;
+    animation-iteration-count: 2;
+}
+
+/* Rakip rengi sınıfları artık yukarıdaki ortak '.played' serisinde karanlık sarı (amber) yapıldı */
+
+.ans-btn.p2-blue {
+    background-color: #03A9F4;
+    color: white;
+    border-color: #0288D1;
+    box-shadow: 0px 4px 0px #0288D1;
+}
+
+/* Sıra bekleme ekranı koruması (Yarı Şeffaf Kilit Katmanı) */
+#boardBlocker {
+    position: absolute;
+    top: 110px; /* Skor tablosunun altında kalması için */
+    left: 0; 
+    width: 100%; 
+    height: calc(100% - 110px);
+    z-index: 8500;
+    pointer-events: all;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Ortaya hizala */
+    background-color: rgba(255, 255, 255, 0.65); /* Hafif şeffaf katman */
+    backdrop-filter: blur(4px); /* Bulanıklık efekti */
+    border-radius: 20px;
+}
+
+#boardBlocker.hidden {
+    display: none !important;
+}
+
+#waitOverlayText {
+    background-color: var(--primary-yellow);
+    color: var(--text-main);
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: pulseLock 2s infinite;
+}
+
+@keyframes pulseLock { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1); } }
+
+/* Rakibin aktif olarak seçtiği ve incelediği peteği anlık mavi gösterme */
+.hex-point.opponent-focus {
+    background: linear-gradient(135deg, #4FC3F7 0%, #03A9F4 50%, #0288D1 100%) !important;
+    color: white !important;
+    transform: scale(1) !important;
+    box-shadow: 0 0 20px rgba(3, 169, 244, 0.8) !important;
+    pointer-events: none;
+}
+
+
+
