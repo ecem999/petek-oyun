@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Kur - Petek</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="prep-body">
+    <div class="prep-container">
+        <div class="back-header">
+            <a href="iki-kisilik-secim.html" class="back-btn">⬅ Geri</a>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #00E5FF; text-shadow: 0px 4px 10px rgba(0,0,0,0.3);">Yeni Oyun Kur</h1>
+            <p style="color: white; opacity: 0.8;">Mavi Takım / Kurucu</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label class="input-label" for="hostNickname">Kurucu Adın</label>
+                <input type="text" id="hostNickname" class="custom-input" placeholder="Adınızı girin..." autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="hostEmail">E-mail Adresin</label>
+                <input type="email" id="hostEmail" class="custom-input" placeholder="isim@domain.com" autocomplete="off">
+            </div>
+
+            <!-- Host Avatar -->
+            <div class="input-group" style="align-items: center;">
+                <label class="input-label" style="align-self: flex-start;">Karakterini Seç</label>
+                
+                <div class="selected-avatars-display">
+                    <div class="selected-avatar-box team-blue-border" id="hostPreviewBox">
+                        <img src="" id="hostPreviewImg" style="display:none;" alt="Oyuncu">
+                    </div>
+                </div>
+
+                <div class="avatar-galleries" id="hostAvatarGrid">
+                    <div class="gallery-row">
+                        <div class="gallery-item avatar-card" data-avatar="k1_beyaz.png"><img src="./k1_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="k2_beyaz.png"><img src="./k2_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="k3_beyaz.png"><img src="./k3_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="k4_beyaz.png"><img src="./k4_beyaz.png"></div>
+                    </div>
+                    <div class="gallery-row">
+                        <div class="gallery-item avatar-card" data-avatar="e1_beyaz.png"><img src="./e1_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="e2_beyaz.png"><img src="./e2_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="e3_beyaz.png"><img src="./e3_beyaz.png"></div>
+                        <div class="gallery-item avatar-card" data-avatar="e4_beyaz.png"><img src="./e4_beyaz.png"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label class="input-label">Oda Kodun</label>
+                <div class="code-display-wrapper">
+                    <div class="code-box" id="roomCodeDisplay">----</div>
+                    <button id="copyCodeBtn" class="copy-btn" title="Kopyala" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span class="tooltip" id="copyTooltip">Kopyalandı!</span>
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn" id="createRoomBtn" style="width: 100%; opacity: 0.5; pointer-events: none;">Odayı Hazırla</button>
+            <p id="roomStatusText" style="text-align: center; color: #00E5FF; display: none; margin-top: 15px; font-weight: bold;">Oda hazır! Rakibin bekleniyor...</p>
+            
+            <div id="startActionArea" style="display: none; margin-top: 20px;">
+                <p style="text-align: center; color: #FFF; margin-bottom: 10px;">Rakip Katıldı: <span id="opponentName" style="color: #FF1744;">---</span></p>
+                <button class="btn" id="startGameBtn" style="width: 100%; background: linear-gradient(135deg, #00E5FF, #00B0FF);">Müsabakayı Başlat</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="iki-kisilik-kur.js"></script>
+</body>
+</html>

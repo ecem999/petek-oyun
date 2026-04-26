@@ -1,4 +1,35 @@
+// Global Fonksiyonlar
+function confirmExit(e) {
+    if(e) e.preventDefault();
+    const modal = document.getElementById('exitModal');
+    if(modal) modal.classList.add('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Modal Buton Dinleyicileri
+    const exitModal = document.getElementById('exitModal');
+    const confirmBtn = document.getElementById('confirmExitBtn');
+    const cancelBtn = document.getElementById('cancelExitBtn');
+
+    if(confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+
+    if(cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            exitModal.classList.remove('active');
+        });
+    }
+
+    if(exitModal) {
+        exitModal.addEventListener('click', (e) => {
+            if(e.target === exitModal) {
+                exitModal.classList.remove('active');
+            }
+        });
+    }
 
     // 1. SORU BANKASI ENTEGRASYONU (DİNAMİK)
     const pointsList = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
@@ -44,6 +75,34 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`LocalStorage Verisi -> Güncel Sıra (Solver/Turn): ${safeRoom.gameState?.solver}`);
     console.log("====================");
 
+    // --- BAŞLANGIÇ AYARLARI (SADECE HOST İÇİN İLK GİRİŞTE) ---
+    if (myRole === 'host' && !safeRoom.gameState) {
+        console.log("Oyun Başlatılıyor: İlk kez kuruluyor...");
+        safeRoom.hostScore = 0;
+        safeRoom.joinerScore = 0;
+        safeRoom.boardState = {};
+        
+        // Puan peteklerini 'available' yap
+        pointsList.forEach(v => {
+            safeRoom.boardState[`hex_${v}`] = 'available';
+        });
+
+        safeRoom.gameState = {
+            turn: 'host', // Ana tur sahibi
+            solver: 'host', // Şu an cevap veren
+            isStolen: false,
+            activeHexVal: null,
+            activeQuestionId: null,
+            shuffledIndices: null,
+            hexesCompleted: 0,
+            lastAction: 'gameStarted',
+            actionTimestamp: Date.now(),
+            usedQuestions: []
+        };
+        
+        localStorage.setItem(roomKey, JSON.stringify(safeRoom));
+    }
+
     // DOM Elem
     const p1Name = document.getElementById('p1Name'); const p1Avatar = document.getElementById('p1Avatar'); const p1Score = document.getElementById('p1Score');
     const p2Name = document.getElementById('p2Name'); const p2Avatar = document.getElementById('p2Avatar'); const p2Score = document.getElementById('p2Score');
@@ -79,13 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const gs = room.gameState;
         
         // --- Navbar İsimleri ---
-        const avatarMap = { 'erkek': '👨', 'kadin': '👩', 'cinsiyetsiz': '🧑' };
         p1Name.textContent = (room.hostNickname || 'Kurucu').slice(0, 10);
-        p1Avatar.textContent = avatarMap[room.hostAvatar] || '👨';
+        if(room.hostAvatar) p1Avatar.innerHTML = `<img src="${room.hostAvatar}" alt="${room.hostNickname}">`;
         p1Score.textContent = room.hostScore;
         
         p2Name.textContent = (room.joinerNickname || 'Katılımcı').slice(0, 10);
-        p2Avatar.textContent = avatarMap[room.joinerAvatar] || '👩';
+        if(room.joinerAvatar) p2Avatar.innerHTML = `<img src="${room.joinerAvatar}" alt="${room.joinerNickname}">`;
         p2Score.textContent = room.joinerScore;
 
         // --- GLOW ANIMATION ENTEGRASYONU ---
@@ -106,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             boardBlocker.classList.add('hidden'); // Kesinlikle gizle
             answersGrid.style.pointerEvents = 'auto'; 
+            document.getElementById('hexGridContainer').style.pointerEvents = 'auto';
         }
 
         // --- BOARD RENKLERİ VE RAKİP TAKİBİ (MAVİ) ---
@@ -114,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!hx) return;
             const stat = room.boardState[`hex_${val}`];
             
-            hx.className = 'hex-point'; // reset
+            hx.className = 'hex-point hexagon'; // reset (hexagon sınıfı korundu)
             
             if (stat === 'host_won') hx.classList.add('p1-correct');
             else if (stat === 'joiner_won') hx.classList.add('p2-correct');
@@ -122,13 +181,14 @@ document.addEventListener('DOMContentLoaded', () => {
             else {
                 // Aktif açık soru varsa
                 if (gs.activeHexVal == val) {
-                    if (gs.isStolen) {
-                        hx.classList.add('opponent-focus'); // Çalınan Petek herkese MAVİ kalsın
-                    } else if (gs.solver === myRole) {
-                        hx.classList.add('opponent-focus'); // Kendi açtığı (Sadece renk değişimi, kalıcı büyüme yok)
+                    hx.classList.remove('selected-blue', 'selected-red'); // Öncekileri temizle
+                    if (gs.solver === 'host') {
+                        hx.classList.add('selected-blue');
                     } else {
-                        hx.classList.add('opponent-focus'); // Rakibin açtığı soru
+                        hx.classList.add('selected-red');
                     }
+                } else {
+                    hx.classList.remove('selected-blue', 'selected-red', 'selected-p1', 'selected-p2');
                 }
             }
         });
@@ -368,6 +428,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('endP2ScoreVal').textContent = room.joinerScore;
         document.getElementById('endP1Name').textContent = room.hostNickname;
         document.getElementById('endP2Name').textContent = room.joinerNickname;
+        
+        if(room.hostAvatar) {
+            document.getElementById('endP1Avatar').innerHTML = `<img src="${room.hostAvatar}" alt="${room.hostNickname}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; border:4px solid #00E5FF;">`;
+        }
+        if(room.joinerAvatar) {
+            document.getElementById('endP2Avatar').innerHTML = `<img src="${room.joinerAvatar}" alt="${room.joinerNickname}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; border:4px solid #FF1744;">`;
+        }
 
         const endTitle = document.getElementById('endGameTitle');
         if (room.hostScore > room.joinerScore) {

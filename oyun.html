@@ -7,54 +7,70 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="game-body">
+    <!-- Üst Köşe Geri Butonu -->
+    <a href="index.html" class="back-btn game-back-btn" onclick="confirmExit(event)">⬅ Geri</a>
+
+    <!-- Özel Çıkış Uyarı Modalı -->
+    <div id="exitModal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <p>Oyundan çıkmak istediğine emin misin? <br><span>Mevcut ilerlemen kaybolacaktır.</span></p>
+            <div class="modal-buttons">
+                <button id="confirmExitBtn" class="m-btn m-btn-red">Evet, Çık</button>
+                <button id="cancelExitBtn" class="m-btn m-btn-blue">Hayır, Devam Et</button>
+            </div>
+        </div>
+    </div>
+
     <div class="game-container">
         
-        <!-- Üst Bölüm (Skor Tablosu) -->
+        <!-- Üst Bölüm (Skor Tablosu - Yeni Tasarım) -->
         <div class="scoreboard-row">
-            <!-- Sol: Oyuncu Bilgisi -->
-            <div class="player-info" id="playerInfoBox">
-                <div class="avatar-circle" id="playerAvatar">👨</div>
-                <div class="player-details">
-                    <div class="player-name" id="playerName">Oyuncu</div>
-                    <div class="player-score">Puan: <span id="playerScore">0</span></div>
+            <!-- Sol: Oyuncu Profili -->
+            <div class="player-profile" id="playerInfoBox">
+                <div class="avatar-box team-blue-border team-blue-glow" id="playerAvatar">
+                    <img src="k1_beyaz.png" alt="Oyuncu">
                 </div>
+                <div class="name-tag" id="playerName">Oyuncu</div>
             </div>
 
-            <!-- Ortada Kronometre (Büyük Petek) -->
+            <!-- Sol Skor -->
+            <div class="score-box">
+                <div class="score-hex blue-text" id="playerScore">0</div>
+            </div>
+
+            <!-- Ortada Kronometre -->
             <div class="timer-wrapper">
                 <div class="timer-hex">
                     <span id="countdown">15</span>
                 </div>
             </div>
 
-            <!-- Sağ: Rakip / Bot Bilgisi -->
-            <div class="player-info right-aligned" id="botInfoBox">
-                <div class="player-details" style="text-align: right;">
-                    <div class="player-name">Robot</div>
-                    <div class="player-score">Puan: <span id="botScore">0</span></div>
+            <!-- Sağ Skor -->
+            <div class="score-box">
+                <div class="score-hex red-text" id="botScore">0</div>
+            </div>
+
+            <!-- Sağ: Rakip Profili -->
+            <div class="player-profile" id="botInfoBox">
+                <div class="avatar-box team-red-border team-red-glow" id="botAvatar">
+                    <img src="robot-avatar.png" alt="Robot">
                 </div>
-                <div class="avatar-circle bot-avatar" id="botAvatar">🤖</div>
+                <div class="name-tag">Robot</div>
             </div>
         </div>
 
         <!-- Orta Bölüm (Puan Paneli Petekleri Honeycomb Grid) -->
         <div class="honeycomb-grid">
-            <div class="hex-row">
-                <div class="hex-point" data-val="50">50</div>
-                <div class="hex-point" data-val="100">100</div>
-                <div class="hex-point" data-val="150">150</div>
-            </div>
-            <div class="hex-row">
-                <div class="hex-point" data-val="200">200</div>
-                <div class="hex-point" data-val="250">250</div>
-                <div class="hex-point" data-val="300">300</div>
-                <div class="hex-point" data-val="350">350</div>
-            </div>
-            <div class="hex-row">
-                <div class="hex-point" data-val="400">400</div>
-                <div class="hex-point" data-val="450">450</div>
-                <div class="hex-point" data-val="500">500</div>
-            </div>
+            <div class="hex-point hexagon" data-val="50"><span>50</span></div>
+            <div class="hex-point hexagon" data-val="100"><span>100</span></div>
+            <div class="hex-point hexagon" data-val="150"><span>150</span></div>
+            <div class="hex-point hexagon" data-val="200"><span>200</span></div>
+            <div class="hex-point hexagon" data-val="250"><span>250</span></div>
+            <div class="hex-point hexagon" data-val="300"><span>300</span></div>
+            <div class="hex-point hexagon" data-val="350"><span>350</span></div>
+            <div class="hex-point hexagon" data-val="400"><span>400</span></div>
+            <div class="hex-point hexagon" data-val="450"><span>450</span></div>
+            <div class="hex-point hexagon" data-val="500"><span>500</span></div>
         </div>
 
         <!-- Alt Bölüm (Soru Paneli) -->
@@ -93,7 +109,7 @@
                 </div>
                 <div style="font-size: 2.5rem; font-weight: 900; color: var(--text-main);">-</div>
                 <div style="text-align: center;">
-                    <div style="font-size: 2.5rem; margin-bottom: 5px;">🤖</div>
+                    <div style="font-size: 2.5rem; margin-bottom: 5px;" id="endBotAvatar">🤖</div>
                     <div style="font-weight: 800; color: var(--text-main);">Robot</div>
                     <div style="font-size: 1.8rem; font-weight: 900; color: #FF4D6D;" id="endBotScoreVal">0</div>
                 </div>

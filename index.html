@@ -8,9 +8,13 @@
 </head>
 <body>
 
+    <!-- Kalıcı ve Zarif Altıgen Izgara Arka Planı -->
+    <div class="hexagon-grid-bg"></div>
+
     <!-- Üst Kontrol Alanı -->
     <div class="header">
         <button class="icon-btn" id="helpBtn" title="Yardım">?</button>
+        <button class="icon-btn" id="settingsBtn" title="Ayarlar">⚙️</button>
     </div>
 
     <!-- Logo Alanı -->
@@ -54,7 +58,54 @@
         </div>
     </div>
 
-    <!-- JavaScript Dosyası -->
+    <!-- Ayarlar Modalı (Popup) -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content settings-content">
+            <button class="close-btn" id="closeSettingsBtn" style="color: #4A148C; font-weight: 900; background: none; border: none; font-size: 1.5rem; position: absolute; right: 15px; top: 15px; cursor: pointer;">✕</button>
+            <h2 class="modal-title" style="color: #4A148C; text-align: center; margin-bottom: 20px;">⚙️ Oyun Ayarları</h2>
+            
+            <div class="modal-body">
+                <!-- Kategori Seçimi -->
+                <div class="input-group">
+                    <label class="input-label" style="color: #4A148C; display: block; margin-bottom: 10px;">Kategori Seç</label>
+                    <div class="category-grid" id="modalCategoryGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div class="category-card" data-category="sanat">
+                            <div class="category-icon">🎨</div>
+                            <div class="category-name">Sanat</div>
+                        </div>
+                        <div class="category-card" data-category="spor">
+                            <div class="category-icon">⚽</div>
+                            <div class="category-name">Spor</div>
+                        </div>
+                        <div class="category-card" data-category="kultur">
+                            <div class="category-icon">🌍</div>
+                            <div class="category-name">G. Kültür</div>
+                        </div>
+                        <div class="category-card" data-category="bilim">
+                            <div class="category-icon">🔬</div>
+                            <div class="category-name">Bilim</div>
+                        </div>
+                        <div class="category-card" data-category="tarih">
+                            <div class="category-icon">🏛️</div>
+                            <div class="category-name">Tarih</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zorluk Seviyesi -->
+                <div class="input-group" style="margin-top: 20px;">
+                    <label class="input-label" style="color: #4A148C; display: block; margin-bottom: 10px;">Zorluk Seviyesi</label>
+                    <div class="diff-group" id="modalDifficultyGroup" style="display: flex; gap: 10px; justify-content: center;">
+                        <button class="diff-btn" data-diff="kolay">Kolay</button>
+                        <button class="diff-btn" data-diff="orta">Orta</button>
+                        <button class="diff-btn" data-diff="zor">Zor</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" id="saveSettingsBtn" style="width: 100%; margin-top: 25px; background-color: #4A148C; color: white;">Ayarları Kaydet</button>
+        </div>
+    </div>
     <script src="main.js"></script>
 </body>
 </html>

@@ -1,18 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const nicknameInput = document.getElementById('nickname');
+    const emailInput = document.getElementById('email');
     const avatarCards = document.querySelectorAll('.avatar-card');
-    const categoryCards = document.querySelectorAll('.category-card');
-    const diffBtns = document.querySelectorAll('.diff-btn');
     const startGameBtn = document.getElementById('startGameBtn');
 
     let selectedAvatar = null;
-    let selectedCategory = null;
-    let selectedDifficulty = null;
+
+    // E-mail Regex Kontrolü
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    };
 
     // Formu kontrol edip butonu aktif/pasif yapar
     const checkForm = () => {
         const nickname = nicknameInput.value.trim();
-        if (nickname.length > 0 && selectedAvatar !== null && selectedCategory !== null && selectedDifficulty !== null) {
+        const email = emailInput.value.trim();
+        const isEmailValid = validateEmail(email);
+
+        if (nickname.length > 0 && isEmailValid && selectedAvatar !== null) {
             startGameBtn.disabled = false;
         } else {
             startGameBtn.disabled = true;
@@ -24,47 +30,46 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             avatarCards.forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            selectedAvatar = card.getAttribute('data-avatar');
-            checkForm();
-        });
-    });
-
-    // Kategori tıklama olayları
-    categoryCards.forEach(card => {
-        card.addEventListener('click', () => {
-            // Tüm kartlardan 'selected' (seçili) sınıfını kaldır
-            categoryCards.forEach(c => c.classList.remove('selected'));
             
-            // Tıklanan karta 'selected' sınıfını ekle
-            card.classList.add('selected');
-            selectedCategory = card.getAttribute('data-category');
+            const imgElement = card.querySelector('img');
+            selectedAvatar = imgElement.getAttribute('src');
             
-            checkForm();
-        });
-    });
-
-    // Zorluk seviyesi tıklama olayları
-    diffBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            diffBtns.forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            selectedDifficulty = btn.getAttribute('data-diff');
+            const playerPreviewImg = document.getElementById('selected-avatar-preview');
+            if(playerPreviewImg) {
+                playerPreviewImg.src = selectedAvatar;
+                playerPreviewImg.style.display = 'block';
+            }
+            
             checkForm();
         });
     });
 
     // İnput değiştiğinde kontrol et
     nicknameInput.addEventListener('input', checkForm);
+    emailInput.addEventListener('input', checkForm);
 
     // Oyna butonu yönlendirmesi
     startGameBtn.addEventListener('click', () => {
-        // Verileri local storage'a kaydet
+        const nickname = nicknameInput.value.trim();
+        const email = emailInput.value.trim();
+
+        if (!validateEmail(email)) {
+            alert("Lütfen geçerli bir e-mail adresi giriniz!");
+            return;
+        }
+
+        // Global ayarları al
+        const globalSettingsRaw = localStorage.getItem('petekGlobalSettings');
+        const globalSettings = globalSettingsRaw ? JSON.parse(globalSettingsRaw) : { category: 'kultur', difficulty: 'orta' };
+
+        // Verileri birleştirip kaydet
         const gameData = {
             mode: 'tek-kisilik',
-            nickname: nicknameInput.value.trim(),
+            nickname: nickname,
+            email: email,
             avatar: selectedAvatar,
-            category: selectedCategory,
-            difficulty: selectedDifficulty
+            category: globalSettings.category,
+            difficulty: globalSettings.difficulty
         };
         localStorage.setItem('petekGameData', JSON.stringify(gameData));
         

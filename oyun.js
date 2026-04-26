@@ -1,4 +1,35 @@
+// Global Fonksiyonlar
+function confirmExit(e) {
+    if(e) e.preventDefault();
+    const modal = document.getElementById('exitModal');
+    if(modal) modal.classList.add('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Modal Buton Dinleyicileri
+    const exitModal = document.getElementById('exitModal');
+    const confirmBtn = document.getElementById('confirmExitBtn');
+    const cancelBtn = document.getElementById('cancelExitBtn');
+
+    if(confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+
+    if(cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            exitModal.classList.remove('active');
+        });
+    }
+
+    if(exitModal) {
+        exitModal.addEventListener('click', (e) => {
+            if(e.target === exitModal) {
+                exitModal.classList.remove('active');
+            }
+        });
+    }
 
     // 1. SORU BANKASI VERİ YAPISI
     const pointsList = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
@@ -27,21 +58,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeDifficulty = 'orta';
     let playerAvatarIcon = '👨';
 
+    // Global Ayarları Yükle
+    const globalSettingsRaw = localStorage.getItem('petekGlobalSettings');
+    if (globalSettingsRaw) {
+        const settings = JSON.parse(globalSettingsRaw);
+        activeCategory = settings.category || 'kultur';
+        activeDifficulty = settings.difficulty || 'orta';
+    }
+
     const gameDataRaw = localStorage.getItem('petekGameData');
     if (gameDataRaw) {
         const gameData = JSON.parse(gameDataRaw);
         if(gameData.nickname) playerNickname = gameData.nickname.slice(0, 10);
         if(gameData.avatar) {
-            playerAvatarIcon = { 'erkek': '👨', 'kadin': '👩', 'cinsiyetsiz': '🧑' }[gameData.avatar] || '👨';
+            playerAvatarIcon = gameData.avatar;
         }
-        if(gameData.category) activeCategory = gameData.category;
-        if(gameData.difficulty) activeDifficulty = gameData.difficulty;
+        // LS'de hazırlık sayfasından gelen kategori/zorluk varsa onları da yedek olarak alabiliriz
+        // ama artık global settings öncelikli.
     }
     
     document.getElementById('playerName').textContent = playerNickname;
-    document.getElementById('playerAvatar').textContent = playerAvatarIcon;
+    // İçeriği img etiketiyle doldur
+    document.getElementById('playerAvatar').innerHTML = `<img src="${playerAvatarIcon}" alt="Oyuncu">`;
     document.getElementById('endPlayerName').textContent = playerNickname;
-    document.getElementById('endPlayerAvatar').textContent = playerAvatarIcon;
+    document.getElementById('endPlayerAvatar').innerHTML = `<img src="${playerAvatarIcon}" alt="Oyuncu">`;
+    
+    // Robotun sabit avatarı
+    document.getElementById('botAvatar').innerHTML = `<img src="robot-avatar.png" alt="Robot">`;
+    document.getElementById('endBotAvatar').innerHTML = `<img src="robot-avatar.png" alt="Robot">`;
     
     const currentCategoryQuestions = questionDB.filter(q => q.category === activeCategory);
 
@@ -58,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionObj = null;
     let timerInterval = null;
     let timeRemaining = 15;
+    let botConsecutiveCorrect = 0; // Kolay mod limitörü için eklendi
     
     // DOM Elemanları
     const hexPoints = document.querySelectorAll('.hex-point');
@@ -99,12 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activeHex != null) return; 
 
             activeHex = hex;
-            activeHex.classList.add('opponent-focus'); // Aktif peteği MAVİ işaretle (İki kişilik modla ortak animasyon)
+            activeHex.classList.add('selected-blue'); // Mavi Oyuncu (P1) seçti
             solver = 'player';
             isStolen = false;
             updateTurnUI();
 
-            hex.classList.add('pop-up');
+            hex.classList.add('pop-up', 'selected-blue'); // Çift garanti
             setTimeout(() => hex.classList.remove('pop-up'), 300);
 
             const pts = parseInt(hex.getAttribute('data-val'));
@@ -200,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (solver === 'bot') {
             const pts = parseInt(activeHex.getAttribute('data-val'));
             if (isCorrect) {
+                botConsecutiveCorrect++; // Botun doğru bilme sayısını güncelle
                 flashScreen('red'); // Bot bildiğinde kırmızı (çünkü oyuncu için üzücü)
                 activeHex.classList.add('bot-correct');
                 botScore += pts;
@@ -207,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 questionText.textContent = `Maalesef, Robot ${pts} puanı kaptı!`;
                 resolveHexInteraction(); 
             } else {
+                botConsecutiveCorrect = 0; // Bot hata yaptığında seriyi sıfırla
                 flashScreen('green'); // Bot bilemediğinde Yeşil flaş (Fırsat!)
                 if (!isStolen) {
                     // Bot bilemedi -> Soru OYUNCUYA devrediliyor! (TAM İstenen Bug Fix)
@@ -226,19 +273,26 @@ document.addEventListener('DOMContentLoaded', () => {
         solver = 'bot';
         isStolen = true;
         updateTurnUI();
+
+        // Dinamik Parlama Güncellemesi
+        if (activeHex) {
+            activeHex.classList.remove('selected-blue');
+            activeHex.classList.add('selected-red');
+        }
+
         showTurnOverlay("DİKKAT! Soru Robotta", () => {
             ansBtns.forEach(btn => btn.classList.remove('correct', 'wrong')); // Olaylar sıfırlansın
             
             questionText.innerHTML = `🤖 <strong>Robot rakibin sorusunu çözmeye çalışıyor...</strong>`;
             
-            let botTime = 4; // 4 saniye taklit animasyonu
+            let botTime = getBotThinkingTime(); // Dinamik bekleme süresi
             countdownEl.textContent = botTime;
             timerInterval = setInterval(() => {
                 botTime--;
                 countdownEl.textContent = botTime;
                 if (botTime <= 0) {
                     clearInterval(timerInterval);
-                    handleAnswerAttempt(botFormulaSuccess());
+                    executeBotAnswerChoice();
                 }
             }, 1000);
         });
@@ -249,22 +303,80 @@ document.addEventListener('DOMContentLoaded', () => {
         isStolen = true;
         updateTurnUI(); // Parlama efekti oyuncuya geçer
 
+        // Dinamik Parlama Güncellemesi
+        if (activeHex) {
+            activeHex.classList.remove('selected-red');
+            activeHex.classList.add('selected-blue');
+        }
+
         showTurnOverlay("FIRSAT! Sıra Sende", () => {
             displayQuestionToPlayer(); // Şıkları etkinleştir, pointer olayını çöz ve 15 Sn süreyi başlat
             questionText.innerHTML = `<strong>(DEVREDİLEN SORU)</strong><br />${currentQuestionObj.question}`;
         });
     }
 
-    function botFormulaSuccess() {
-        let successProbability = 0.6; 
-        if (activeDifficulty === 'kolay') successProbability = 0.3; 
-        else if (activeDifficulty === 'zor') successProbability = 0.9;
-        return Math.random() < successProbability;
+    // Botun zorluğa göre rastgele bekleme/düşünme süresini hesaplayan fonksiyon
+    function getBotThinkingTime() {
+        if (activeDifficulty === 'kolay') return Math.floor(Math.random() * 3) + 6; // 6-8 saniye (Çok Yavaş)
+        if (activeDifficulty === 'orta') return Math.floor(Math.random() * 3) + 4;  // 4-6 saniye (Orta)
+        return Math.floor(Math.random() * 3) + 2;                                   // 2-4 saniye (Çok Çevik/Zor)
+    }
+
+    function executeBotAnswerChoice() {
+        let isCorrectChoice = false;
+
+        // Kesin Olasılık Filtresi
+        if (activeDifficulty === 'kolay') {
+            isCorrectChoice = (Math.random() < 0.10); // Sadece %10 ihtimalle doğru cevap
+        } else if (activeDifficulty === 'orta') {
+            isCorrectChoice = (Math.random() < 0.30); // Sadece %30 ihtimalle doğru cevap
+        } else if (activeDifficulty === 'zor') {
+            isCorrectChoice = (Math.random() < 0.60); // Sadece %60 ihtimalle doğru cevap
+        }
+
+        // DOM üzerinden şıkları analiz et (doğruyu ve yanlışları ayır)
+        const correctBtns = [];
+        const wrongBtns = [];
+        ansBtns.forEach(btn => {
+            if (btn.getAttribute('data-correct') === 'true') {
+                correctBtns.push(btn);
+            } else {
+                wrongBtns.push(btn);
+            }
+        });
+
+        let selectedOption = null;
+
+        if (isCorrectChoice && correctBtns.length > 0) {
+            selectedOption = correctBtns[0]; // Şanslı, doğru şıkkı seçti
+        } else if (wrongBtns.length > 0) {
+            // Yanlış Cevap Zorunluluğu: Olasılık yanlış çıktığında MÜTLAKA diğer 3 yanlış şıktan birini rastgele seç
+            const randomIndex = Math.floor(Math.random() * wrongBtns.length);
+            selectedOption = wrongBtns[randomIndex];
+        }
+
+        // Botun Şık Seçimi Görselleştirilmesi
+        if (selectedOption) {
+            const isReallyCorrect = selectedOption.getAttribute('data-correct') === 'true';
+            
+            // Kullanıcıya botun hangi şıkkı seçtiğini göstermek için geçici class ekle
+            if (isReallyCorrect) selectedOption.classList.add('correct');
+            else selectedOption.classList.add('wrong');
+            
+            // Yarım saniye bekledikten sonra skora işle ve turu bitir
+            setTimeout(() => {
+                handleAnswerAttempt(isReallyCorrect);
+            }, 600);
+        } else {
+            handleAnswerAttempt(false); // Fallback
+        }
     }
 
     // Bir petek kazanıldığında veya yandığında (tamamen sonuçlandığında) çağrılır
     function resolveHexInteraction() {
-        if (activeHex) activeHex.classList.remove('opponent-focus'); // Kapanan sorunun mavi aktif ışığını söndür
+        if (activeHex) {
+            activeHex.classList.remove('selected-blue', 'selected-red', 'selected-p1', 'selected-p2', 'opponent-focus'); 
+        }
         hexesCompleted++;
         
         setTimeout(() => {
@@ -306,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const randomHexObj = availableHexes[Math.floor(Math.random() * availableHexes.length)];
         activeHex = randomHexObj;
-        activeHex.classList.add('opponent-focus'); // Aktif peteği MAVİ işaretle (İki kişilik modla ortak animasyon)
+        activeHex.classList.add('selected-red'); // Bot (P2) seçti
         
         const ptVal = parseInt(randomHexObj.getAttribute('data-val'));
         activeHex.classList.add('pop-up');
@@ -325,14 +437,14 @@ document.addEventListener('DOMContentLoaded', () => {
         answersGrid.style.pointerEvents = 'none';
         questionText.innerHTML = `🤖 <strong>Robot Yeni Soru Seçti: ${ptVal} Puan! Düşünüyor...</strong>`;
         
-        let botTime = 4;
+        let botTime = getBotThinkingTime(); // Dinamik bekleme süresi
         countdownEl.textContent = botTime;
         timerInterval = setInterval(() => {
             botTime--;
             countdownEl.textContent = botTime;
             if (botTime <= 0) {
                 clearInterval(timerInterval);
-                handleAnswerAttempt(botFormulaSuccess());
+                executeBotAnswerChoice();
             }
         }, 1000);
     }

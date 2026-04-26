@@ -17,7 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             joinerAvatarGrid.forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            jAvatar = card.getAttribute('data-avatar');
+            
+            const imgElement = card.querySelector('img');
+            jAvatar = imgElement.getAttribute('src');
+            
+            const joinerPreviewImg = document.getElementById('joinerPreviewImg');
+            if(joinerPreviewImg) {
+                joinerPreviewImg.src = jAvatar;
+                joinerPreviewImg.style.display = 'block';
+            }
+            
             validateJoinerForm();
         });
     });
@@ -92,7 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             hostAvatarGrid.forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            hAvatar = card.getAttribute('data-avatar');
+            
+            const imgElement = card.querySelector('img');
+            hAvatar = imgElement.getAttribute('src');
+            
+            const hostPreviewImg = document.getElementById('hostPreviewImg');
+            if(hostPreviewImg) {
+                hostPreviewImg.src = hAvatar;
+                hostPreviewImg.style.display = 'block';
+            }
+            
             validateHostForm();
         });
     });
