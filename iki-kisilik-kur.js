@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRoomCode = code;
         roomCodeDisplay.textContent = code;
 
-        // Odayı LS'a kaydet
+        // Odayı Firebase'e kaydet
         const roomData = {
             id: code,
             hostNickname: hostNickname.value.trim(),
@@ -77,9 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
             category: globalSettings.category,
             difficulty: globalSettings.difficulty,
             status: 'created',
-            timestamp: Date.now()
+            timestamp: firebase.database.ServerValue.TIMESTAMP
         };
-        localStorage.setItem(`room_${code}`, JSON.stringify(roomData));
+        
+        db.ref('rooms/' + code).set(roomData).then(() => {
+            console.log("Oda Firebase'de oluşturuldu.");
+        });
 
         // UI Güncelle
         createRoomBtn.style.display = 'none';
@@ -88,15 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
         hostEmail.disabled = true;
         hostAvatarGrid.forEach(c => c.style.pointerEvents = 'none');
 
-        // Session'a kaydet
-        sessionStorage.setItem('petekMultiData', JSON.stringify({ role: 'host', roomKey: `room_${code}` }));
+        // Session'a kaydet (Uygulama içi referans için)
+        sessionStorage.setItem('petekMultiData', JSON.stringify({ role: 'host', roomCode: code }));
 
         // Kopyala butonunu göster
         const copyBtn = document.getElementById('copyCodeBtn');
         if(copyBtn) copyBtn.style.display = 'flex';
 
-        // Polling başlat
-        startPolling(code);
+        // Firebase Dinleyici Başlat
+        listenForJoiner(code);
     });
 
     // Kopyalama Mantığı
@@ -119,18 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function startPolling(code) {
-        if (pollInterval) clearInterval(pollInterval);
-        pollInterval = setInterval(() => {
-            const roomRaw = localStorage.getItem(`room_${code}`);
-            if (roomRaw) {
-                const room = JSON.parse(roomRaw);
-                if (room.status === 'joined') {
-                    clearInterval(pollInterval);
-                    showStartGame(room.joinerNickname);
-                }
+    function listenForJoiner(code) {
+        db.ref('rooms/' + code).on('value', (snapshot) => {
+            const room = snapshot.val();
+            if (room && room.status === 'joined') {
+                showStartGame(room.joinerNickname);
             }
-        }, 2000);
+        });
     }
 
     function showStartGame(jName) {
@@ -141,12 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startGameBtn.addEventListener('click', () => {
-        const roomRaw = localStorage.getItem(`room_${currentRoomCode}`);
-        if (roomRaw) {
-            const room = JSON.parse(roomRaw);
-            room.status = 'started';
-            localStorage.setItem(`room_${currentRoomCode}`, JSON.stringify(room));
+        db.ref('rooms/' + currentRoomCode).update({
+            status: 'started'
+        }).then(() => {
             window.location.href = 'oyun-2.html';
-        }
+        });
     });
 });

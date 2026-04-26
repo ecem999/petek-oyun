@@ -54,53 +54,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const code = joinCode.value.trim().toUpperCase();
-        const roomKey = `room_${code}`;
 
-        const roomRaw = localStorage.getItem(roomKey);
-        if (roomRaw) {
-            const roomData = JSON.parse(roomRaw);
-            if (roomData.status === 'created') {
-                // Odaya gir!
-                roomData.status = 'joined';
-                roomData.joinerNickname = joinerNickname.value.trim();
-                roomData.joinerEmail = emailVal;
-                roomData.joinerAvatar = jAvatar;
-                
-                localStorage.setItem(roomKey, JSON.stringify(roomData));
-                
-                // UI Güncelle
-                joinRoomBtn.style.display = 'none';
-                joinStatusText.style.display = 'block';
-                joinCode.disabled = true;
-                joinerNickname.disabled = true;
-                joinerEmail.disabled = true;
-                joinerAvatarGrid.forEach(c => c.style.pointerEvents = 'none');
+        db.ref('rooms/' + code).once('value').then((snapshot) => {
+            const roomData = snapshot.val();
+            
+            if (roomData) {
+                if (roomData.status === 'created') {
+                    // Odaya gir!
+                    const updates = {
+                        status: 'joined',
+                        joinerNickname: joinerNickname.value.trim(),
+                        joinerEmail: emailVal,
+                        joinerAvatar: jAvatar
+                    };
+                    
+                    db.ref('rooms/' + code).update(updates).then(() => {
+                        // UI Güncelle
+                        joinRoomBtn.style.display = 'none';
+                        joinStatusText.style.display = 'block';
+                        joinCode.disabled = true;
+                        joinerNickname.disabled = true;
+                        joinerEmail.disabled = true;
+                        joinerAvatarGrid.forEach(c => c.style.pointerEvents = 'none');
 
-                // Session'a kaydet
-                sessionStorage.setItem('petekMultiData', JSON.stringify({ role: 'joiner', roomKey: roomKey }));
+                        // Session'a kaydet
+                        sessionStorage.setItem('petekMultiData', JSON.stringify({ role: 'joiner', roomCode: code }));
 
-                // Polling başlat (Oyun başlasın mı diye)
-                startStartPoll(roomKey);
-
+                        // Firebase Dinleyici Başlat (Oyun başlasın mı diye)
+                        listenForStart(code);
+                    });
+                } else {
+                    alert("Uyarı: Bu oda dolu veya oyun zaten başlamış.");
+                }
             } else {
-                alert("Uyarı: Bu oda dolu veya oyun zaten başlamış.");
+                alert("Hata: Geçersiz oda kodu!");
             }
-        } else {
-            alert("Hata: Geçersiz oda kodu!");
-        }
+        });
     });
 
-    function startStartPoll(roomKey) {
-        if (pollInterval) clearInterval(pollInterval);
-        pollInterval = setInterval(() => {
-            const roomRaw = localStorage.getItem(roomKey);
-            if (roomRaw) {
-                const room = JSON.parse(roomRaw);
-                if (room.status === 'started') {
-                    clearInterval(pollInterval);
-                    window.location.href = 'oyun-2.html';
-                }
+    function listenForStart(code) {
+        db.ref('rooms/' + code).on('value', (snapshot) => {
+            const room = snapshot.val();
+            if (room && room.status === 'started') {
+                window.location.href = 'oyun-2.html';
             }
-        }, 2000);
+        });
     }
 });
